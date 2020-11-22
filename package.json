@@ -1,0 +1,26 @@
+{
+  "name": "glassframe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js localhost 3032"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dom-element-path": "^1.2.0",
+    "express": "^4.17.1",
+    "express-http-proxy": "^1.6.2",
+    "helmet": "^4.2.0",
+    "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^1.0.6",
+    "node-fetch": "^2.6.1",
+    "node-http-proxy": "^0.2.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
