@@ -1,0 +1,3 @@
+dispatch:
+  - url: "glassframe.ryaposov.com/*"
+    service: glassframe

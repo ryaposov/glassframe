@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js localhost 3032"
+    "dev": "nodemon index.js localhost 3032",
+    "start": "node index.js",
+    "deploy": "gcloud app deploy"
   },
   "author": "",
   "license": "ISC",

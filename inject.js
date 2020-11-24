@@ -12,8 +12,7 @@ window.addEventListener('message', function (e) {
 
 const recordCallback = (event) => {
   parent.postMessage(
-    Object.assign({}, event, { iframeId: window.iframeId }),
-    'http://localhost:3030'
+    Object.assign({}, event, { iframeId: window.iframeId }), window.copybugEndpoint
   )
 }
 
