@@ -136,12 +136,13 @@ app.use('/', proxy(selectProxyHost, {
   },
   proxyReqOptDecorator: function(proxyReqOpts, srcReq) {
     proxyReqOpts.headers['referer'] = srcReq.mainUrl;
+    proxyReqOpts.headers['user-agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1';
+    proxyReqOpts.headers['Content-Security-Policy'] = "default-src *  data: blob: filesystem: about: ws: wss: 'unsafe-inline' 'unsafe-eval' 'unsafe-dynamic'; script-src * data: blob: 'unsafe-inline' 'unsafe-eval'; connect-src * data: blob: 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src * data: blob: ; style-src * data: blob: 'unsafe-inline'; font-src * data: blob: 'unsafe-inline'";
 
     return proxyReqOpts;
   },
   userResHeaderDecorator(headers, userReq, userRes, proxyReq, proxyRes) {
     if (headers['location']) {
-      console.log(endpoint + userReq.pathUrl)
       headers['location'] = endpoint + userReq.pathUrl
     }
 
