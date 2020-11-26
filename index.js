@@ -42,7 +42,7 @@ app.get('/', function (req, res, next) {
   
   if (req.fullUrl) {
     req.fullUrl = new URL(req.fullUrl).href
-  } else {
+  } else if (req.mainUrl) {
     req.mainUrl = new URL(req.mainUrl).href
   }
 
@@ -87,15 +87,22 @@ function modifyURLs (data, userReq, contentType) {
 
   content = content
     .replace(/="\/\//g, `="https://`)
+    .replace(/=\/\//g, `=https://`)
     .replace(/url\(\/\//g, `url(https://`)
     .replace(escapedRegex, token)
     .replace(new RegExp(mainUrl, 'g'), token)
     .replace(/href="\//g, `href="${token}/`)
+    .replace(/href=\//g, `href=${token}/`)
     .replace(/data-href="\//g, `data-href="${token}/`)
+    .replace(/data-href=\//g, `data-href=${token}/`)
     .replace(/src="\//g, `src="${token}/`)
+    .replace(/src=\//g, `src=${token}/`)
     .replace(/data-src="\//g, `data-src="${token}/`)
+    .replace(/data-src=\//g, `data-src=${token}/`)
     .replace(/srcset="\//g, `srcset="${token}/`)
+    .replace(/srcset=\//g, `srcset=${token}/`)
     .replace(/data-srcset="\//g, `data-srcset="${token}/`)
+    .replace(/data-srcset=\//g, `data-srcset=${token}/`)
     .replace(/url\("\//g, `url("${token}/`)
     .replace(/url\(\//g, `url(${token}/`)
 
@@ -118,7 +125,7 @@ function injectJS (html, userReq) {
     </script>
   `
 
-  const baseUrl = `${endpoint}/test/`
+  const baseUrl = `${userReq.mainUrl}`
 
   const base = `
     <base href="${baseUrl}">
@@ -158,7 +165,7 @@ app.use('/', proxy(selectProxyHost, {
         userRes.statusCode = 200
       }
       
-      if (contentType && (contentType.includes('text') || contentType.includes('application'))) {
+      if (contentType && (contentType.includes('text') || contentType.includes('application') && !contentType.includes('font'))) {
         content = modifyURLs(content, userReq, contentType)
         content = injectJS(content, userReq)
       }
