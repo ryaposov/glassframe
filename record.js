@@ -93,10 +93,10 @@ function record (logCallback) {
         if (playbackInProgress == false) {
           userEventLog.push(userEvent);
           logCallback(userEvent)
-          console.log("Logged "+userEvent.type+" event.");
+          if (window.gf.debug) console.log("Logged "+userEvent.type+" event.");
         }
       } else {
-        console.warn("Null selector");
+        if (window.gf.debug) console.warn("Null selector");
       }
     }
   };
@@ -154,7 +154,7 @@ function record (logCallback) {
     if (element === document || element === document.documentElement) return 'document';
     
     if (!(element instanceof HTMLElement)) {
-      throw new Error('element must be of type `HTMLElement`.');
+      if (window.gf.debug) throw new Error('element must be of type `HTMLElement`.');
     }
   
     return buildPathString(parentElements(element));
@@ -235,7 +235,7 @@ function record (logCallback) {
     "start": function() {
       if (playbackInProgress == false) {
         
-        console.log("Start recording.");
+        if (window.gf.debug) console.log("Start recording.");
         
         // Record the time that occurred from the page being loaded to the recording started. We will
         // subtract this value from the timestamp on the events in order to eliminate the dead time from our playback JSON log.
@@ -243,7 +243,7 @@ function record (logCallback) {
         recordInProgress = true;
         
       } else {
-        throw new Error("Cannot start recording -- test playback is in progress.");
+        if (window.gf.debug) throw new Error("Cannot start recording -- test playback is in progress.");
       }
     },
     
@@ -252,7 +252,7 @@ function record (logCallback) {
     */
     "stop": function() {
       
-      console.log("Stop recording.");
+      if (window.gf.debug) console.log("Stop recording.");
       
       recordInProgress = false;
     
@@ -261,7 +261,7 @@ function record (logCallback) {
         ,"event_log":userEventLog
       };
       
-      console.log(JSON.stringify(playbackScript));
+      if (window.gf.debug) console.log(JSON.stringify(playbackScript));
     }
   };	
 }

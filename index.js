@@ -19,14 +19,6 @@ app.use(cors({
   credentials: true
 }))
 
-// app.get('/', function (req, res, next) {
-//   if (req.cookies.mainUrl) {
-//     next()
-//   } else {
-//     res.status(500).send({ error: 'Invalid URL configuration.' })
-//   }
-// })
-
 app.get('/', function (req, res, next) {
   let url = new URL(endpoint + req.originalUrl)
 
@@ -49,6 +41,14 @@ app.get('/', function (req, res, next) {
   next()
 })
 
+app.get('/', function (req, res, next) {
+  if (req.mainUrl) {
+    next()
+  } else {
+    res.status(500).send({ error: 'Invalid URL configuration.' })
+  }
+})
+
 app.use(cookieParser())
 
 function selectProxyHost (req) {
@@ -56,7 +56,7 @@ function selectProxyHost (req) {
 }
 
 function modifyURLs (data, userReq, contentType) {
-  const mainUrl = userReq.mainUrl
+  const mainUrl = userReq.mainUrl.substring(0, userReq.mainUrl.length - 1)
   const token = `${endpoint}/?mainUrl=${mainUrl}&pathUrl=`
   const tokenEscaped = `${endpointEscaped}/?mainUrl=${mainUrl}&pathUrl=`
   let content = data.toString('utf-8').trim()
@@ -92,7 +92,7 @@ function modifyURLs (data, userReq, contentType) {
     .replace(escapedRegex, token)
     .replace(new RegExp(mainUrl, 'g'), token)
     .replace(/href="\//g, `href="${token}/`)
-    .replace(/href=\//g, `href=${token}/`)
+    .replace(/(\s)href=\//g, ` href=${token}/`)
     .replace(/data-href="\//g, `data-href="${token}/`)
     .replace(/data-href=\//g, `data-href=${token}/`)
     .replace(/src="\//g, `src="${token}/`)
@@ -113,23 +113,25 @@ function injectJS (html, userReq) {
   const record = fs.readFileSync(path.resolve('./record.js'), 'utf8')
   const playback = fs.readFileSync(path.resolve('./playback.js'), 'utf8')
   const js = fs.readFileSync(path.resolve('./inject.js'), 'utf8')
+  const baseUrl = userReq.mainUrl
   let content = html
   const script = `
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="application/javascript">
+      window.gf = {}
+      // window.gf.debug = "${process.env.NODE_ENV !== 'production'}"; 
+      window.gf.debug = false; 
+      window.gf.endpoint = "${endpoint}"
       window.iframeId = "${userReq.iframeId}"; 
       ${playback}
       ${record}
       window.copybugEndpoint = "${copybugEndpoint}"
+      window.baseUrl = "${baseUrl}"
       ${js}
     </script>
   `
 
-  const baseUrl = `${userReq.mainUrl}`
-
-  const base = `
-    <base href="${baseUrl}">
-  `
+  const base = `<base href="${baseUrl}">`
   content = content
     .replace('</head>', base + '</head>')
     .replace('</html>', script + '</html>')

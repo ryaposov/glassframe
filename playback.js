@@ -16,9 +16,9 @@ function playback (userEvent) {
     var elementText = $(userEvent.selector).val() || $(userEvent.selector)[0].innerHTML;
     
     if (elementText.indexOf(userEvent.text) !== -1) {
-      console.log("PASS - element does contain specified text.");
+      if (window.gf.debug) console.log("PASS - element does contain specified text.");
     } else {
-      throw new Error("FAIL - element does not contain specified text.");
+      if (window.gf.debug) throw new Error("FAIL - element does not contain specified text.");
     }
   };
     
@@ -50,7 +50,7 @@ function playback (userEvent) {
         
         // verify that the target from the coordinates matches the logged CSS selector
         if (target === eventTarget) {
-          console.log("PASS - click target matches selector element.");
+          if (window.gf.debug) console.log("PASS - click target matches selector element.");
           // selectorHash[userEvent.selector] = eventTarget;
         } else {
           // throw new Error("FAIL - Element at point ("+userEvent.clientX+"px, "+userEvent.clientY+"px) does not match selector " + userEvent.selector);
@@ -144,7 +144,7 @@ function playback (userEvent) {
         verifyContains(userEvent);
         return;
       default:
-        throw new Error("Unsupported event type.");
+        if (window.gf.debug) throw new Error("Unsupported event type.");
         break;
     }
     
