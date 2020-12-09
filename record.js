@@ -154,7 +154,7 @@ function record (logCallback) {
     if (element === document || element === document.documentElement) return 'document';
     
     if (!(element instanceof HTMLElement)) {
-      if (window.gf.debug) throw new Error('element must be of type `HTMLElement`.');
+      throw new Error('element must be of type `HTMLElement`.');
     }
   
     return buildPathString(parentElements(element));
@@ -243,7 +243,7 @@ function record (logCallback) {
         recordInProgress = true;
         
       } else {
-        if (window.gf.debug) throw new Error("Cannot start recording -- test playback is in progress.");
+        throw new Error("Cannot start recording -- test playback is in progress.");
       }
     },
     

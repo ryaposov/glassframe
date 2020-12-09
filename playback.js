@@ -18,7 +18,7 @@ function playback (userEvent) {
     if (elementText.indexOf(userEvent.text) !== -1) {
       if (window.gf.debug) console.log("PASS - element does contain specified text.");
     } else {
-      if (window.gf.debug) throw new Error("FAIL - element does not contain specified text.");
+      throw new Error("FAIL - element does not contain specified text.");
     }
   };
     
@@ -144,7 +144,7 @@ function playback (userEvent) {
         verifyContains(userEvent);
         return;
       default:
-        if (window.gf.debug) throw new Error("Unsupported event type.");
+        throw new Error("Unsupported event type.");
         break;
     }
     
